@@ -1,0 +1,30 @@
+{
+  "published": [],
+  "rejected": [
+    {
+      "title": "ACH vs. Paper Checks: The Hidden Costs Businesses Overlook in 2026",
+      "reason": "truncated: last line does not end in a complete sentence",
+      "date": "2026-08-23"
+    },
+    {
+      "title": "Choosing the Right Check Stock: Security Features, Paper Types, and Cost for Small Businesses",
+      "reason": "0/3 votes, Missing failure-mode section, incomplete content, and contains precise uncited pricing and questionable factual claims; Article is incomplete (ends mid-sentence at 'Outsourced Prin') and thus fails the structural completeness requirement.; The article contains fabricated pricing numbers without hedg",
+      "date": "2026-08-23"
+    },
+    {
+      "title": "How to Safely Store and Manage Check Stock: Best Practices for Small Businesses",
+      "reason": "0/2 votes, contains precise pricing without sources and lacks a dedicated failure\u2011mode section; The article includes suspiciously precise pricing numbers ($150\u2013$300, $80\u2013$150, $20\u2013$50/month, $10\u2013$30/month) without hedging or a stated source, and the failure-mode section is incomplete (cut off mid-sentence).",
+      "date": "2026-08-23"
+    },
+    {
+      "title": "Checkeeper vs Deluxe vs QuickBooks Checks: Which Actually Costs Less at 100 Checks a Month?",
+      "reason": "truncated: last line does not end in a complete sentence",
+      "date": "2026-08-23"
+    },
+    {
+      "title": "VOID Checks vs. Stop-Payment Fees: Which Saves More Money When You Mess Up?",
+      "reason": "1/3 votes, Missing required failure\u2011mode section and a clear per\u2011check cost example; Missing 'when this does NOT work' failure-mode section and a worked cost-per-check calculation for different business sizes.",
+      "date": "2026-08-23"
+    }
+  ]
+}
