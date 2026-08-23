@@ -147,7 +147,7 @@ Propose exactly ONE new article topic for today that is genuinely useful, not a 
     return json.loads(extract_json(r.text)), r.provider
 
 
-def draft_article(topic, has_existing_articles):
+def draft_article(topic, existing):
     byline = topic.get('byline', 'editorial-team')
     if byline not in VOICE_NOTES:
         byline = 'editorial-team'
@@ -157,11 +157,20 @@ def draft_article(topic, has_existing_articles):
         'editorial-team': 'derek-voss',
     }[byline]
 
-    internal_links_rule = (
-        "- Include 2-3 internal links to existing articles where genuinely relevant, using relative paths like /articles/<slug>."
-        if has_existing_articles else
-        "- This is one of the first articles on the site — there is nothing to internally link to yet. Do NOT invent or guess a slug for an internal link; skip internal linking entirely rather than link to something that doesn't exist."
-    )
+    if existing:
+        slug_list = '\n'.join(f'- /articles/{a["slug"]}  ("{a["title"]}")' for a in existing)
+        internal_links_rule = (
+            "- Include 2-3 internal links to existing articles where genuinely relevant. "
+            "ONLY use a slug from this exact list of real, currently-published articles -- "
+            "never invent a plausible-sounding slug or title, and never link a placeholder "
+            "like (#):\n" + slug_list
+        )
+    else:
+        internal_links_rule = (
+            "- This is one of the first articles on the site — there is nothing to "
+            "internally link to yet. Do NOT invent or guess a slug for an internal link; "
+            "skip internal linking entirely rather than link to something that doesn't exist."
+        )
 
     prompt = f"""Write a full article for OnlineCheckPrinter.com in MDX format.
 
@@ -239,6 +248,22 @@ def truncation_reason(mdx_text):
     return None
 
 
+def broken_link_reason(mdx_text, existing_slugs):
+    """Deterministic check for hallucinated internal links -- an LLM will
+    happily invent a plausible-sounding /articles/some-title link that was
+    never actually published (found and fixed 10 of these live on the
+    sister site RentByCard on 2026-08-23). Cheaper and more reliable than
+    asking a voter LLM to catch this by eye. Returns a reason string if any
+    link is broken, None if all are real."""
+    linked = set(re.findall(r'\]\(/articles/([a-z0-9-]+)\)', mdx_text))
+    broken = sorted(linked - existing_slugs)
+    if broken:
+        return f'broken internal link(s): {", ".join(broken)}'
+    if re.search(r'\]\(#\)', mdx_text):
+        return 'dead "(#)" placeholder link'
+    return None
+
+
 def vote_on_article(mdx_text):
     prompt = f"""You are an editorial reviewer for OnlineCheckPrinter.com, a site for small business owners comparing check-printing services and software. Review this DRAFT article and decide whether it's ready to publish as-is.
 
@@ -294,7 +319,7 @@ def attempt_one(existing, history, args, attempt_no):
         return False
 
     try:
-        mdx_raw, draft_provider = draft_article(topic, bool(existing))
+        mdx_raw, draft_provider = draft_article(topic, existing)
     except Exception as e:
         log(f'Drafting failed: {e}. Skipping attempt.')
         return False
@@ -309,6 +334,18 @@ def attempt_one(existing, history, args, attempt_no):
         (drafts_dir / f'{slug}.mdx').write_text(mdx_text, encoding='utf-8')
         history['rejected'].append({
             'title': topic['title'], 'reason': f'truncated: {trunc_reason}',
+            'date': datetime.date.today().isoformat(),
+        })
+        return False
+
+    link_reason = broken_link_reason(mdx_text, {a['slug'] for a in existing})
+    if link_reason:
+        log(f'Draft has a bad internal link ({link_reason}) — skipping vote, not publishing.')
+        drafts_dir = DATA_DIR / 'rejected-drafts'
+        drafts_dir.mkdir(exist_ok=True)
+        (drafts_dir / f'{slug}.mdx').write_text(mdx_text, encoding='utf-8')
+        history['rejected'].append({
+            'title': topic['title'], 'reason': link_reason,
             'date': datetime.date.today().isoformat(),
         })
         return False
