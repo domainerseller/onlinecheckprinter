@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found — OnlineCheckPrinter"
+  description="The page you were looking for could not be found."
+>
+  <div class="max-w-2xl mx-auto px-4 py-24 text-center">
+    <div class="text-7xl font-extrabold text-brand mb-4">404</div>
+    <h1 class="text-3xl font-bold text-slate-900 mb-3">Page not found</h1>
+    <p class="text-slate-600 mb-8">
+      The page you're looking for doesn't exist or has been moved. Try one of these instead:
+    </p>
+    <div class="flex items-center justify-center gap-3">
+      <a
+        href="/"
+        class="bg-brand text-white px-5 py-2.5 rounded-md font-semibold hover:bg-brand-dark transition-colors"
+      >
+        Home
+      </a>
+      <a
+        href="/articles"
+        class="bg-white border border-slate-300 text-slate-700 px-5 py-2.5 rounded-md font-semibold hover:border-brand hover:text-brand transition-colors"
+      >
+        Browse Articles
+      </a>
+    </div>
+  </div>
+</BaseLayout>

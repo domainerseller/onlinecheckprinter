@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://onlinecheckprinter.com/sitemap-index.xml

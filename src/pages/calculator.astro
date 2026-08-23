@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Check Printing Cost Calculator — Service vs DIY in 30 Seconds"
+  description="Free calculator that tells you whether a check-printing service or printing your own checks costs less at your volume. Enter your monthly check count and get an instant comparison."
+>
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center mb-10">
+      <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand bg-brand-light px-3 py-1 rounded-full mb-3">
+        Free · No Signup
+      </span>
+      <h1 class="text-4xl font-extrabold text-slate-900 mb-3">
+        Check Printing Cost Calculator
+      </h1>
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+        Answers the only question that matters: at your monthly check volume, does a
+        printing/mailing service or printing your own checks actually cost less? Enter your
+        numbers below.
+      </p>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2 mb-12">
+      <div class="bg-white border border-slate-200 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-5">Your numbers</h2>
+
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1" for="checksPerMonth">
+              Checks printed per month
+            </label>
+            <input
+              id="checksPerMonth"
+              type="number"
+              min="0"
+              step="10"
+              value="100"
+              class="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-brand focus:ring-1 focus:ring-brand outline-none"
+            />
+            <p class="text-xs text-slate-500 mt-1">Include vendor, payroll, and any other paper checks you cut.</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1" for="serviceFee">
+              Service per-check fee ($)
+            </label>
+            <input
+              id="serviceFee"
+              type="number"
+              min="0"
+              step="0.05"
+              value="0.85"
+              class="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-brand focus:ring-1 focus:ring-brand outline-none"
+            />
+            <p class="text-xs text-slate-500 mt-1">Printing + mailing services typically run $0.50–$1.50/check depending on plan and volume.</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1" for="diySoftware">
+              DIY software subscription ($/month)
+            </label>
+            <input
+              id="diySoftware"
+              type="number"
+              min="0"
+              step="1"
+              value="29"
+              class="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-brand focus:ring-1 focus:ring-brand outline-none"
+            />
+            <p class="text-xs text-slate-500 mt-1">Check-printing software or your accounting software's check module. $0 if it's already included.</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1" for="diyPerCheck">
+              DIY cost per check ($: blank stock + ink + envelope + postage)
+            </label>
+            <input
+              id="diyPerCheck"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0.35"
+              class="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-brand focus:ring-1 focus:ring-brand outline-none"
+            />
+            <p class="text-xs text-slate-500 mt-1">Blank check stock + ink typically runs under $0.10/check; a stamp and envelope adds roughly $0.25–$0.35 if you mail it yourself.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-brand to-brand-dark text-white rounded-xl p-6">
+        <h2 class="text-lg font-bold mb-5">Your result</h2>
+
+        <div id="verdict" class="text-3xl font-extrabold mb-1">—</div>
+        <div id="verdictLabel" class="text-sm text-white/80 mb-6">Enter your numbers above</div>
+
+        <div class="space-y-4 text-sm">
+          <div class="flex justify-between pb-3 border-b border-white/20">
+            <span class="text-white/80">Monthly cost via service</span>
+            <span id="serviceCost" class="font-bold">$0</span>
+          </div>
+          <div class="flex justify-between pb-3 border-b border-white/20">
+            <span class="text-white/80">Monthly cost DIY</span>
+            <span id="diyCost" class="font-bold">$0</span>
+          </div>
+          <div class="flex justify-between pb-3 border-b border-white/20">
+            <span class="text-white/80">Monthly difference</span>
+            <span id="monthlyDiff" class="font-bold">$0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-white/80">Year 1 difference</span>
+            <span id="yearDiff" class="text-xl font-extrabold">$0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="interpretation" class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-12">
+      <h2 class="text-lg font-bold text-slate-900 mb-3">What this means</h2>
+      <div id="interpretationBody" class="text-slate-700 text-sm leading-relaxed">
+        Enter your monthly check volume, service fee, and DIY costs above to see a personalized
+        comparison.
+      </div>
+    </div>
+
+    <div class="prose-article">
+      <h2>How to use this calculator</h2>
+      <p>
+        Four numbers determine whether a printing/mailing service or DIY printing costs less
+        for your business:
+      </p>
+      <ol>
+        <li>
+          <strong>Checks per month</strong> — your total volume across payroll, vendors, and
+          any other paper checks.
+        </li>
+        <li>
+          <strong>Service per-check fee</strong> — what a service like Checkeeper, Deluxe, or
+          Bill.com's check feature charges per check, all-in (printing + postage).
+        </li>
+        <li>
+          <strong>DIY software subscription</strong> — the fixed monthly cost of check-printing
+          software, if any. Some accounting software includes this at no extra charge.
+        </li>
+        <li>
+          <strong>DIY cost per check</strong> — blank check stock, ink, envelope, and a stamp if
+          you're mailing it yourself.
+        </li>
+      </ol>
+
+      <h2>Reading the result</h2>
+      <ul>
+        <li>
+          <strong>Service costs less</strong> — at your volume, the convenience and the
+          all-in fee beat doing it yourself. Worth checking the security/fraud-prevention
+          features of the service you're comparing.
+        </li>
+        <li>
+          <strong>DIY costs less</strong> — printing your own checks saves real money, but
+          factor in the time cost of printing, stuffing envelopes, and getting to the mailbox
+          or post office every cycle.
+        </li>
+        <li>
+          <strong>Close to break-even</strong> — the deciding factor is probably not cost. Look
+          at time, integration with your accounting software, and fraud-prevention features
+          instead.
+        </li>
+      </ul>
+
+      <h2>What the calculator does NOT account for</h2>
+      <ul>
+        <li>
+          <strong>Your time.</strong> DIY printing takes real time every cycle — printing,
+          signing, stuffing, and mailing. At high volume that time has a real dollar cost.
+        </li>
+        <li>
+          <strong>Fraud and security risk.</strong> Cheaper isn't always safer. Positive pay,
+          tamper-evident check stock, and a service's own fraud monitoring all have value this
+          calculator doesn't price in.
+        </li>
+        <li>
+          <strong>Setup and hardware costs.</strong> A MICR-capable printer, if you don't
+          already have one, is a one-time cost this calculator doesn't include.
+        </li>
+        <li>
+          <strong>Tax and legal implications.</strong> Consult your accountant on
+          record-retention requirements for canceled checks either way.
+        </li>
+      </ul>
+
+      <h2>Who built this</h2>
+      <p>
+        This calculator was built by the <a href="/authors">OnlineCheckPrinter editorial
+        team</a> as a free resource for small business owners evaluating their options. It's
+        not a substitute for professional financial advice — see our <a href="/terms">Terms
+        of Service</a> — but it should save you 15 minutes of spreadsheet math.
+      </p>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const ids = ['checksPerMonth', 'serviceFee', 'diySoftware', 'diyPerCheck'];
+      const inputs = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+      const out = {
+        verdict: document.getElementById('verdict'),
+        verdictLabel: document.getElementById('verdictLabel'),
+        serviceCost: document.getElementById('serviceCost'),
+        diyCost: document.getElementById('diyCost'),
+        monthlyDiff: document.getElementById('monthlyDiff'),
+        yearDiff: document.getElementById('yearDiff'),
+        interpretation: document.getElementById('interpretationBody'),
+      };
+
+      const fmt = (n) =>
+        (n < 0 ? '-' : '') +
+        '$' +
+        Math.abs(Math.round(n)).toLocaleString('en-US');
+
+      function calc() {
+        const checks = Number(inputs.checksPerMonth.value) || 0;
+        const serviceFee = Number(inputs.serviceFee.value) || 0;
+        const diySoftware = Number(inputs.diySoftware.value) || 0;
+        const diyPerCheck = Number(inputs.diyPerCheck.value) || 0;
+
+        const serviceCost = checks * serviceFee;
+        const diyCost = diySoftware + checks * diyPerCheck;
+        const monthlyDiff = serviceCost - diyCost; // positive = service costs more
+        const yearDiff = monthlyDiff * 12;
+
+        out.serviceCost.textContent = fmt(serviceCost);
+        out.diyCost.textContent = fmt(diyCost);
+        out.monthlyDiff.textContent = fmt(Math.abs(monthlyDiff));
+        out.yearDiff.textContent = fmt(Math.abs(yearDiff));
+
+        let label;
+        let interp;
+
+        if (Math.abs(monthlyDiff) <= 15) {
+          label = 'Roughly break-even';
+          out.verdict.textContent = fmt(monthlyDiff);
+          out.verdict.style.color = '#fcd34d';
+          interp =
+            "At your volume, service and DIY cost about the same. This is when the decision should come down to <strong>your time</strong> and <strong>fraud-prevention features</strong>, not price — a close call on cost usually isn't close on convenience or risk.";
+        } else if (monthlyDiff > 0) {
+          label = 'DIY costs less';
+          out.verdict.textContent = fmt(diyCost);
+          out.verdict.style.color = '#86efac';
+          interp =
+            'Printing your own checks saves you <strong>' +
+            fmt(Math.abs(monthlyDiff)) +
+            '/month</strong> (' +
+            fmt(Math.abs(yearDiff)) +
+            '/year) at this volume. Factor in the time cost of printing and mailing each cycle, and make sure your setup includes real fraud-prevention basics — tamper-evident stock, positive pay if your bank offers it.';
+        } else {
+          label = 'Service costs less';
+          out.verdict.textContent = fmt(serviceCost);
+          out.verdict.style.color = '#86efac';
+          interp =
+            'A printing/mailing service saves you <strong>' +
+            fmt(Math.abs(monthlyDiff)) +
+            '/month</strong> (' +
+            fmt(Math.abs(yearDiff)) +
+            '/year) at this volume once you account for your DIY software subscription and per-check costs. Compare the security features of specific services before choosing — cheaper isn't always safer.';
+        }
+
+        out.verdictLabel.textContent = label;
+        out.interpretation.innerHTML = interp;
+      }
+
+      ids.forEach((id) => inputs[id].addEventListener('input', calc));
+      calc();
+    })();
+  </script>
+</BaseLayout>

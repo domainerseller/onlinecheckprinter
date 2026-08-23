@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const authors = await getCollection('authors');
+const named = authors.filter((a) => a.slug !== 'editorial-team');
+---
+
+<BaseLayout
+  title="Our Editorial Team — OnlineCheckPrinter"
+  description="Meet the payment-systems and payment-security editors behind OnlineCheckPrinter.com."
+>
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-3">Our Editorial Team</h1>
+    <p class="text-lg text-slate-600 mb-10 max-w-2xl">
+      Independent writers with real expertise in business payment systems, check-printing
+      vendors, and payment fraud. Every article is fact-checked against current vendor and
+      bank-program terms.
+    </p>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {named.map((author) => (
+        <a
+          href={`/authors/${author.slug}`}
+          class="block bg-white border border-slate-200 rounded-lg p-6 hover:border-brand hover:shadow-md transition-all"
+        >
+          <div class="flex items-start gap-4">
+            <div class="w-16 h-16 rounded-full bg-brand text-white grid place-items-center text-2xl font-bold flex-shrink-0">
+              {author.data.name.split(' ').map((n) => n[0]).join('')}
+            </div>
+            <div class="flex-1">
+              <h2 class="text-xl font-bold text-slate-900">{author.data.name}</h2>
+              <div class="text-sm text-brand font-semibold mb-2">{author.data.title}</div>
+              <p class="text-slate-600 text-sm">{author.data.bio}</p>
+            </div>
+          </div>
+          {author.data.specialties.length > 0 && (
+            <div class="mt-4 flex flex-wrap gap-2">
+              {author.data.specialties.slice(0, 3).map((spec) => (
+                <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded">
+                  {spec}
+                </span>
+              ))}
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-12 p-6 bg-brand-light/40 border border-brand-light rounded-lg">
+      <h3 class="font-bold text-slate-900 mb-2">Our Editorial Standards</h3>
+      <p class="text-slate-600 text-sm">
+        Every article on OnlineCheckPrinter.com is researched, fact-checked, and reviewed
+        against the current terms of the services and vendors discussed. We disclose all
+        affiliate relationships and refuse to recommend products that don't meet our "would
+        I use this for my own business?" test. Read our full
+        <a href="/disclosure" class="text-brand underline">affiliate disclosure</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
